@@ -1,5 +1,5 @@
-use crate::response::market;
 use crate::response::data;
+use crate::response::market;
 use rocket::http::ContentType;
 use rocket::http::Status;
 
@@ -12,7 +12,7 @@ pub async fn latest() -> data::Data {
             Ok(v) => data::Data::new(v.as_bytes().to_vec(), ContentType::JSON),
             Err(e) => {
                 let mut d = data::Data::new(e.to_string().as_bytes().to_vec(), ContentType::Plain);
-                d.status = Status::NotFound;
+                d.status = Status::InternalServerError;
                 d
             }
         }

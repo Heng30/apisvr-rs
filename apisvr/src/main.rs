@@ -41,16 +41,15 @@ fn server_start() -> Rocket<rocket::Build> {
     config.port = conf::server().listen_port;
     config.address = IpAddr::from_str(conf::server().listen_address.as_str()).unwrap();
 
-    rocket::custom(config)
-        .attach(cors::Cors)
-        .mount(
-            "/",
-            routes![
-                controller::ping::ping,
-                controller::cryptocurrency::latest,
-                controller::market::latest,
-            ],
-        )
+    rocket::custom(config).attach(cors::Cors).mount(
+        "/",
+        routes![
+            controller::ping::ping,
+            controller::cryptocurrency::latest,
+            controller::cryptocurrency::greed_fear,
+            controller::market::latest,
+        ],
+    )
 }
 
 fn init_logger() {

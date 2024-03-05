@@ -1,6 +1,6 @@
 pub mod cryptocurrency;
-pub mod market;
 pub mod data;
+pub mod market;
 
 use rocket::tokio;
 use std::sync::Mutex;

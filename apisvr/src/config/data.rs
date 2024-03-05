@@ -35,6 +35,9 @@ pub struct Socket5 {
     pub port: u16,
 
     pub coinmarketcap: bool,
+    pub alternative: bool,
+    pub blockstream: bool,
+    pub ethscan: bool,
     pub awtmt: bool,
 }
 
@@ -44,6 +47,9 @@ impl Default for Socket5 {
             ip: "127.0.0.1".to_string(),
             port: 1084,
             coinmarketcap: false,
+            alternative: false,
+            blockstream: false,
+            ethscan: false,
             awtmt: false,
         }
     }

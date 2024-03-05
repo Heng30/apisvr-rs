@@ -73,12 +73,7 @@ async fn fetch_awtmt() -> Result<String> {
         Client::new()
     };
 
-    let resp = client
-        .get(API)
-        .send()
-        .await?
-        .json::<ResponseData>()
-        .await?;
+    let resp = client.get(API).send().await?.json::<ResponseData>().await?;
 
     let mut resp = resp.data.snapshot.into_iter().collect::<Vec<(_, _)>>();
     resp.sort_by(|a, b| a.0.cmp(&b.0));

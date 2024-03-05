@@ -12,9 +12,21 @@ pub async fn latest() -> data::Data {
             Ok(v) => data::Data::new(v.as_bytes().to_vec(), ContentType::JSON),
             Err(e) => {
                 let mut d = data::Data::new(e.to_string().as_bytes().to_vec(), ContentType::Plain);
-                d.status = Status::NotFound;
+                d.status = Status::InternalServerError;
                 d
             }
+        }
+    }
+}
+
+#[get("/cryptocurrency/stats")]
+pub async fn greed_fear() -> data::Data {
+    match cryptocurrency::stats_cache().await {
+        Ok(v) => data::Data::new(v.as_bytes().to_vec(), ContentType::JSON),
+        Err(e) => {
+            let mut d = data::Data::new(e.to_string().as_bytes().to_vec(), ContentType::Plain);
+            d.status = Status::InternalServerError;
+            d
         }
     }
 }

@@ -12,6 +12,7 @@ pub struct Config {
     pub server: Server,
     pub socket5: Socket5,
     pub api_key: ApiKey,
+    pub auth_token: AuthToken,
     pub timer: Timer,
 }
 
@@ -74,4 +75,9 @@ impl Default for Timer {
             awtmt_market: 30,
         }
     }
+}
+
+#[derive(Serialize, Deserialize, Default, Debug, Clone)]
+pub struct AuthToken {
+    pub rssbox_android: String,
 }

@@ -12,6 +12,8 @@ pub mod entry;
 const MAX_CONNECTIONS: u32 = 3;
 
 pub const RSSBOX_ANDROID_FEEDBACK_TABLE: &str = "rssbox_android_feedback";
+pub const RSSBOX_ANDROID_RSS_CN_TABLE: &str = "rssbox_android_rss_cn";
+pub const RSSBOX_ANDROID_RSS_EN_TABLE: &str = "rssbox_android_rss_en";
 
 #[derive(Serialize, Deserialize, Debug, Clone, sqlx::FromRow)]
 pub struct ComEntry {
@@ -45,6 +47,14 @@ pub async fn init(db_path: &str) {
     entry::new(RSSBOX_ANDROID_FEEDBACK_TABLE)
         .await
         .expect("create rssbox android feedback table failed");
+
+    entry::new_with_unique(RSSBOX_ANDROID_RSS_CN_TABLE)
+        .await
+        .expect("create rssbox android rss cn table failed");
+
+    entry::new_with_unique(RSSBOX_ANDROID_RSS_EN_TABLE)
+        .await
+        .expect("create rssbox android rss en table failed");
 }
 
 #[allow(dead_code)]

@@ -1,19 +1,28 @@
 use super::{pool, ComEntry};
 use anyhow::Result;
 
-pub async fn new(table_name: &str) -> Result<()> {
-    sqlx::query(&format!(
+async fn _new(table_name: &str, is_unique_data: bool) -> Result<()> {
+    let sql = format!(
         "CREATE TABLE IF NOT EXISTS {} (
              id INTEGER PRIMARY KEY,
              uuid TEXT NOT NULL UNIQUE,
-             data TEXT NOT NULL
+             data TEXT NOT NULL {}
              )",
-        table_name
-    ))
-    .execute(&pool())
-    .await?;
+        table_name,
+        if is_unique_data { "UNIQUE" } else { "" }
+    );
+
+    sqlx::query(&sql).execute(&pool()).await?;
 
     Ok(())
+}
+
+pub async fn new(table_name: &str) -> Result<()> {
+    _new(table_name, false).await
+}
+
+pub async fn new_with_unique(table_name: &str) -> Result<()> {
+    _new(table_name, true).await
 }
 
 pub async fn delete(table_name: &str, uuid: &str) -> Result<()> {

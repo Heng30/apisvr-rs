@@ -6,6 +6,8 @@ API服务器。代理和聚合数据。
 #### 支持的API
 - coinmarketcap: `https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest` => `/cryptocurrency/latest`
 - awtmt: `https://api-ddc-wscn.awtmt.com/market/real` => `/market/latest`;
+- feedback
+- rss list
 
 #### 如何构建？
 - 安装`Rust`和`Cargo`

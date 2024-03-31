@@ -6,6 +6,8 @@ It designed to be an api server that proxys and aggregates information.
 #### Support API
 - coinmarketcap: `https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest` => `/cryptocurrency/latest`
 - awtmt: `https://api-ddc-wscn.awtmt.com/market/real` => `/market/latest`;
+- feedback
+- rss list
 
 #### How to build?
 - Install `Rust` and `Cargo`

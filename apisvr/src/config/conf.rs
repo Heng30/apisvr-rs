@@ -29,6 +29,10 @@ pub fn api_key() -> data::ApiKey {
     CONFIG.lock().unwrap().api_key.clone()
 }
 
+pub fn auth_token() -> data::AuthToken {
+    CONFIG.lock().unwrap().auth_token.clone()
+}
+
 pub fn timer() -> data::Timer {
     CONFIG.lock().unwrap().timer.clone()
 }
@@ -70,6 +74,7 @@ impl Config {
                     self.server = c.server;
                     self.socket5 = c.socket5;
                     self.api_key = c.api_key;
+                    self.auth_token = c.auth_token;
                     self.timer = c.timer;
                     Ok(())
                 }

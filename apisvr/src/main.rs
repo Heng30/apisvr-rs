@@ -20,7 +20,7 @@ mod middleware;
 mod response;
 
 use config::conf;
-use middleware::cors;
+use middleware::{auth, cors};
 
 #[launch]
 async fn rocket() -> _ {
@@ -42,6 +42,7 @@ fn server_start() -> Rocket<rocket::Build> {
 
     rocket::custom(config)
         .attach(cors::Cors)
+        .attach(auth::Auth)
         .mount(
             "/",
             routes![
@@ -49,6 +50,7 @@ fn server_start() -> Rocket<rocket::Build> {
                 controller::cryptocurrency::latest,
                 controller::cryptocurrency::greed_fear,
                 controller::market::latest,
+                auth::unauthorized,
             ],
         )
         .mount(
@@ -57,6 +59,14 @@ fn server_start() -> Rocket<rocket::Build> {
                 controller::feedback::rssbox_android::all,
                 controller::feedback::rssbox_android::insert,
                 controller::feedback::rssbox_android::delete,
+            ],
+        )
+        .mount(
+            "/rssbox/rss/list",
+            routes![
+                controller::rss::all,
+                controller::rss::insert,
+                controller::rss::delete,
             ],
         )
 }

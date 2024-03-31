@@ -1,13 +1,14 @@
 use super::RUNTIME;
 use crate::conf;
-use std::collections::HashMap;
 use anyhow::{anyhow, Result};
 use reqwest::{
     header::{HeaderMap, ACCEPT},
     Client, Proxy,
 };
 use rocket::tokio::{self, sync::Mutex, time::Duration};
+use serde::{Deserialize, Serialize};
 use serde_json::Value;
+use std::collections::HashMap;
 
 lazy_static! {
     static ref LATEST: Mutex<Option<String>> = Mutex::new(None);
@@ -244,7 +245,6 @@ pub async fn fetch_bitcoin_gas_fee() -> Result<(u64, u64, u64)> {
         .into_values()
         .map(|v| v as u64)
         .collect::<Vec<u64>>();
-
 
     response.sort_by(|a, b| a.partial_cmp(b).unwrap());
     match response.len() {

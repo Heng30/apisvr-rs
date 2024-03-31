@@ -1,7 +1,5 @@
-use crate::response::data;
-use crate::response::market;
-use rocket::http::ContentType;
-use rocket::http::Status;
+use crate::response::{data, market};
+use rocket::http::{ContentType, Status};
 
 #[get("/market/latest")]
 pub async fn latest() -> data::Data {

@@ -1,8 +1,7 @@
 use super::data::{self, Config};
 use anyhow::{anyhow, Result};
 use platform_dirs::AppDirs;
-use std::fs;
-use std::sync::Mutex;
+use std::{fs, path::PathBuf, sync::Mutex};
 
 const APP_NANME: &str = "apisvr";
 const DB_NAME: &str = "apisvr.db";
@@ -32,6 +31,10 @@ pub fn api_key() -> data::ApiKey {
 
 pub fn timer() -> data::Timer {
     CONFIG.lock().unwrap().timer.clone()
+}
+
+pub fn db_path() -> PathBuf {
+    CONFIG.lock().unwrap().db_path.clone()
 }
 
 #[allow(unused)]

@@ -11,12 +11,30 @@ pub struct Data {
     pub status: Status,
 }
 
+impl Default for Data {
+    fn default() -> Self {
+        Data {
+            data: vec![],
+            r#type: ContentType::Plain,
+            status: Status::Ok,
+        }
+    }
+}
+
 impl Data {
     pub fn new(data: Vec<u8>, t: ContentType) -> Self {
         Self {
             data,
             r#type: t,
             status: Status::Ok,
+        }
+    }
+
+    pub fn new_with_status(data: Vec<u8>, t: ContentType, status: Status) -> Self {
+        Self {
+            data,
+            r#type: t,
+            status,
         }
     }
 }

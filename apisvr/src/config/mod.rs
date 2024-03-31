@@ -1,3 +1,4 @@
+pub mod conf;
 mod data;
 
-pub mod conf;
+pub use conf::db_path;

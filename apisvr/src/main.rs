@@ -4,9 +4,6 @@ extern crate rocket;
 #[macro_use]
 extern crate lazy_static;
 
-#[macro_use]
-extern crate serde_derive;
-
 use chrono::Local;
 use env_logger::fmt::Color as LColor;
 use log::debug;
@@ -18,6 +15,7 @@ use std::str::FromStr;
 
 mod config;
 mod controller;
+mod db;
 mod middleware;
 mod response;
 
@@ -25,13 +23,14 @@ use config::conf;
 use middleware::cors;
 
 #[launch]
-fn rocket() -> _ {
+async fn rocket() -> _ {
     init_logger();
 
     debug!("start...");
 
     conf::init();
     response::init();
+    db::init(config::db_path().to_str().expect("db_path is invalid")).await;
 
     server_start()
 }
@@ -41,15 +40,25 @@ fn server_start() -> Rocket<rocket::Build> {
     config.port = conf::server().listen_port;
     config.address = IpAddr::from_str(conf::server().listen_address.as_str()).unwrap();
 
-    rocket::custom(config).attach(cors::Cors).mount(
-        "/",
-        routes![
-            controller::ping::ping,
-            controller::cryptocurrency::latest,
-            controller::cryptocurrency::greed_fear,
-            controller::market::latest,
-        ],
-    )
+    rocket::custom(config)
+        .attach(cors::Cors)
+        .mount(
+            "/",
+            routes![
+                controller::ping::ping,
+                controller::cryptocurrency::latest,
+                controller::cryptocurrency::greed_fear,
+                controller::market::latest,
+            ],
+        )
+        .mount(
+            "/rssbox/android",
+            routes![
+                controller::feedback::rssbox_android::all,
+                controller::feedback::rssbox_android::insert,
+                controller::feedback::rssbox_android::delete,
+            ],
+        )
 }
 
 fn init_logger() {

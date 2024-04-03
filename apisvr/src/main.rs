@@ -59,6 +59,8 @@ fn server_start() -> Rocket<rocket::Build> {
                 controller::feedback::rssbox_android::all,
                 controller::feedback::rssbox_android::insert,
                 controller::feedback::rssbox_android::delete,
+                controller::backup_recover::rssbox_android::backup,
+                controller::backup_recover::rssbox_android::recover,
             ],
         )
         .mount(

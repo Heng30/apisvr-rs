@@ -14,6 +14,7 @@ const MAX_CONNECTIONS: u32 = 3;
 pub const RSSBOX_ANDROID_FEEDBACK_TABLE: &str = "rssbox_android_feedback";
 pub const RSSBOX_ANDROID_RSS_CN_TABLE: &str = "rssbox_android_rss_cn";
 pub const RSSBOX_ANDROID_RSS_EN_TABLE: &str = "rssbox_android_rss_en";
+pub const RSSBOX_ANDROID_BACKUP_TABLE: &str = "rssbox_android_backup";
 
 #[derive(Serialize, Deserialize, Debug, Clone, sqlx::FromRow)]
 pub struct ComEntry {
@@ -44,9 +45,14 @@ async fn create_db(db_path: &str) -> Result<(), sqlx::Error> {
 
 pub async fn init(db_path: &str) {
     create_db(db_path).await.expect("create db failed");
+
     entry::new(RSSBOX_ANDROID_FEEDBACK_TABLE)
         .await
         .expect("create rssbox android feedback table failed");
+
+    entry::new(RSSBOX_ANDROID_BACKUP_TABLE)
+        .await
+        .expect("create rssbox android backup table failed");
 
     entry::new_with_unique(RSSBOX_ANDROID_RSS_CN_TABLE)
         .await

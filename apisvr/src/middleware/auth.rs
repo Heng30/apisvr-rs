@@ -23,11 +23,10 @@ impl Fairing for Auth {
 
     async fn on_request(&self, request: &mut Request<'_>, _: &mut Data<'_>) {
         match request.method() {
-            Method::Delete => {
+            Method::Delete | Method::Get | Method::Post => {
                 let (is_prefix, is_auth) = rssbox_android(request);
                 if is_prefix && !is_auth {
-                    request.set_method(Method::Get);
-                    request.set_uri(Origin::parse("/unauthorized").unwrap());
+                    navigate_unauthorized(request);
                 }
             }
             _ => (),
@@ -35,8 +34,15 @@ impl Fairing for Auth {
     }
 }
 
+fn navigate_unauthorized(request: &mut Request) {
+    request.set_method(Method::Get);
+    request.set_uri(Origin::parse("/unauthorized").unwrap());
+}
+
 fn rssbox_android(request: &Request<'_>) -> (bool, bool) {
     let prefix_paths = vec![
+        "/rssbox/android/backup",
+        "/rssbox/android/recover",
         "/rssbox/android/feedback",
         "/rssbox/rss/list/cn",
         "/rssbox/rss/list/en",

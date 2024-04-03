@@ -109,6 +109,11 @@ pub async fn select_all(table_name: &str) -> Result<Vec<ComEntry>> {
 }
 
 #[allow(dead_code)]
+pub async fn is_exist(table_name: &str, uuid: &str) -> bool {
+    select(table_name, uuid).await.is_ok()
+}
+
+#[allow(dead_code)]
 pub async fn drop_table(table_name: &str) -> Result<()> {
     super::drop_table(&table_name).await
 }

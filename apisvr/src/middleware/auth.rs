@@ -23,10 +23,26 @@ impl Fairing for Auth {
 
     async fn on_request(&self, request: &mut Request<'_>, _: &mut Data<'_>) {
         match request.method() {
-            Method::Delete | Method::Get | Method::Post => {
-                let (is_prefix, is_auth) = rssbox_android(request);
-                if is_prefix && !is_auth {
-                    navigate_unauthorized(request);
+            Method::Delete => {
+                let prefix_paths = vec![
+                    "/rssbox/android/feedback",
+                    "/rssbox/rss/list/cn",
+                    "/rssbox/rss/list/en",
+                ];
+                if !handle_unauthorized_rssbox(request, prefix_paths) {
+                    return;
+                }
+            }
+            Method::Get => {
+                let prefix_paths = vec!["/rssbox/android/recover"];
+                if !handle_unauthorized_rssbox(request, prefix_paths) {
+                    return;
+                }
+            }
+            Method::Post => {
+                let prefix_paths = vec!["/rssbox/android/backup"];
+                if !handle_unauthorized_rssbox(request, prefix_paths) {
+                    return;
                 }
             }
             _ => (),
@@ -34,20 +50,24 @@ impl Fairing for Auth {
     }
 }
 
+fn handle_unauthorized_rssbox(request: &mut Request, prefix_paths: Vec<&str>) -> bool {
+    let mut is_continue = true;
+
+    let (is_prefix, is_auth) = rssbox_android(request, prefix_paths);
+    if is_prefix && !is_auth {
+        navigate_unauthorized(request);
+        is_continue = false;
+    }
+
+    is_continue
+}
+
 fn navigate_unauthorized(request: &mut Request) {
     request.set_method(Method::Get);
     request.set_uri(Origin::parse("/unauthorized").unwrap());
 }
 
-fn rssbox_android(request: &Request<'_>) -> (bool, bool) {
-    let prefix_paths = vec![
-        "/rssbox/android/backup",
-        "/rssbox/android/recover",
-        "/rssbox/android/feedback",
-        "/rssbox/rss/list/cn",
-        "/rssbox/rss/list/en",
-    ];
-
+fn rssbox_android(request: &Request, prefix_paths: Vec<&str>) -> (bool, bool) {
     let path = request.uri().path().as_str();
     log::debug!("{path:?}");
 

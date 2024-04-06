@@ -4,6 +4,7 @@ pub mod feedback;
 pub mod market;
 pub mod ping;
 pub mod rss;
+pub mod versions;
 
 use crate::{db::entry, response::data};
 use anyhow::Result;

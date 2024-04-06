@@ -51,6 +51,8 @@ fn server_start() -> Rocket<rocket::Build> {
                 controller::cryptocurrency::greed_fear,
                 controller::market::latest,
                 auth::unauthorized,
+                controller::versions::update,
+                controller::versions::get,
             ],
         )
         .mount(

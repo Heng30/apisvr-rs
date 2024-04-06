@@ -29,19 +29,29 @@ impl Fairing for Auth {
                     "/rssbox/rss/list/cn",
                     "/rssbox/rss/list/en",
                 ];
-                if !handle_unauthorized_rssbox(request, prefix_paths) {
+
+                let token = config::auth_token().admin;
+                if !handle_unauthorized(request, prefix_paths, &token) {
                     return;
                 }
             }
             Method::Get => {
                 let prefix_paths = vec!["/rssbox/android/recover"];
-                if !handle_unauthorized_rssbox(request, prefix_paths) {
+                let token = config::auth_token().rssbox_android;
+                if !handle_unauthorized(request, prefix_paths, &token) {
                     return;
                 }
             }
             Method::Post => {
+                let prefix_paths = vec!["/latest/version"];
+                let token = config::auth_token().admin;
+                if !handle_unauthorized(request, prefix_paths, &token) {
+                    return;
+                }
+
                 let prefix_paths = vec!["/rssbox/android/backup"];
-                if !handle_unauthorized_rssbox(request, prefix_paths) {
+                let token = config::auth_token().rssbox_android;
+                if !handle_unauthorized(request, prefix_paths, &token) {
                     return;
                 }
             }
@@ -50,10 +60,10 @@ impl Fairing for Auth {
     }
 }
 
-fn handle_unauthorized_rssbox(request: &mut Request, prefix_paths: Vec<&str>) -> bool {
+fn handle_unauthorized(request: &mut Request, prefix_paths: Vec<&str>, token: &str) -> bool {
     let mut is_continue = true;
 
-    let (is_prefix, is_auth) = rssbox_android(request, prefix_paths);
+    let (is_prefix, is_auth) = rssbox_android(request, prefix_paths, &token);
     if is_prefix && !is_auth {
         navigate_unauthorized(request);
         is_continue = false;
@@ -67,9 +77,8 @@ fn navigate_unauthorized(request: &mut Request) {
     request.set_uri(Origin::parse("/unauthorized").unwrap());
 }
 
-fn rssbox_android(request: &Request, prefix_paths: Vec<&str>) -> (bool, bool) {
+fn rssbox_android(request: &Request, prefix_paths: Vec<&str>, token: &str) -> (bool, bool) {
     let path = request.uri().path().as_str();
-    log::debug!("{path:?}");
 
     if prefix_paths
         .into_iter()
@@ -80,12 +89,10 @@ fn rssbox_android(request: &Request, prefix_paths: Vec<&str>) -> (bool, bool) {
         return (false, false);
     }
 
-    let token = config::auth_token().rssbox_android;
     if token.is_empty() {
         return (true, true);
     }
 
-    log::warn!("{}", header::AUTHORIZATION.as_str());
     if let Some(http_token) = request.headers().get(header::AUTHORIZATION.as_str()).next() {
         let http_token = http_token
             .split_whitespace()

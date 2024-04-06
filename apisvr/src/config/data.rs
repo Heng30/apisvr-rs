@@ -80,4 +80,5 @@ impl Default for Timer {
 #[derive(Serialize, Deserialize, Default, Debug, Clone)]
 pub struct AuthToken {
     pub rssbox_android: String,
+    pub admin: String,
 }

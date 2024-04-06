@@ -15,6 +15,7 @@ pub const RSSBOX_ANDROID_FEEDBACK_TABLE: &str = "rssbox_android_feedback";
 pub const RSSBOX_ANDROID_RSS_CN_TABLE: &str = "rssbox_android_rss_cn";
 pub const RSSBOX_ANDROID_RSS_EN_TABLE: &str = "rssbox_android_rss_en";
 pub const RSSBOX_ANDROID_BACKUP_TABLE: &str = "rssbox_android_backup";
+pub const VERSIONS_TABLE: &str = "versions";
 
 #[derive(Serialize, Deserialize, Debug, Clone, sqlx::FromRow)]
 pub struct ComEntry {
@@ -53,6 +54,10 @@ pub async fn init(db_path: &str) {
     entry::new(RSSBOX_ANDROID_BACKUP_TABLE)
         .await
         .expect("create rssbox android backup table failed");
+
+    entry::new(VERSIONS_TABLE)
+        .await
+        .expect("create rssbox versions table failed");
 
     entry::new_with_unique(RSSBOX_ANDROID_RSS_CN_TABLE)
         .await

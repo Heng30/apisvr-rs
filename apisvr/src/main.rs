@@ -73,6 +73,14 @@ fn server_start() -> Rocket<rocket::Build> {
                 controller::rss::delete,
             ],
         )
+        .mount(
+            "/musicbox",
+            routes![
+                controller::feedback::musicbox_android::all,
+                controller::feedback::musicbox_android::insert,
+                controller::feedback::musicbox_android::delete,
+            ],
+        )
 }
 
 fn init_logger() {

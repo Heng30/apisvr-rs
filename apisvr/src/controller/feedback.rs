@@ -20,3 +20,23 @@ pub mod rssbox_android {
         com_delete(RSSBOX_ANDROID_FEEDBACK_TABLE, uuid).await
     }
 }
+
+pub mod musicbox_android {
+    use super::*;
+    use crate::db::MUSICBOX_ANDROID_FEEDBACK_TABLE;
+
+    #[get("/feedbacks")]
+    pub async fn all() -> data::Data {
+        com_all(MUSICBOX_ANDROID_FEEDBACK_TABLE).await
+    }
+
+    #[post("/feedback", format = "application/json", data = "<input>")]
+    pub async fn insert(input: &str) -> data::Data {
+        com_insert(MUSICBOX_ANDROID_FEEDBACK_TABLE, input).await
+    }
+
+    #[delete("/feedback/<uuid>")]
+    pub async fn delete(uuid: &str) -> data::Data {
+        com_delete(MUSICBOX_ANDROID_FEEDBACK_TABLE, uuid).await
+    }
+}
